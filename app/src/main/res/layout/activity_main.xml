@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="원격지 IP 주소" />
+
+        <EditText
+            android:id="@+id/ipEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="예: 192.168.0.10"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="포트 번호" />
+
+        <EditText
+            android:id="@+id/portEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="예: 8080"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/connectButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="연결" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4-bit 데이터 값 (0~15)" />
+
+        <EditText
+            android:id="@+id/bitValueEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="전송(write)" />
+
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="초기화" />
+
+        <Button
+            android:id="@+id/tempButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="온습도 센서 읽기" />
+
+        <TextView
+            android:id="@+id/tempResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="온도 값: -"
+            android:textColor="#FF0000"/>
+
+        <TextView
+            android:id="@+id/humResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="습도 값: -"
+            android:textColor="#FF0000"/>
+
+        <Button
+            android:id="@+id/exitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="종료" />
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+    </LinearLayout>
+</ScrollView>
