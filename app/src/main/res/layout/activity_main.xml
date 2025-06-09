@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:orientation="vertical"
-        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
+        <!-- IP 주소 입력 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,9 +21,10 @@
             android:id="@+id/ipEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="예: 192.168.0.10"
+            android:hint="예: 113.198.233.228"
             android:inputType="text" />
 
+        <!-- 포트 번호 입력 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,12 +37,14 @@
             android:hint="예: 8080"
             android:inputType="number" />
 
+        <!-- 연결 버튼 -->
         <Button
             android:id="@+id/connectButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="연결" />
 
+        <!-- LED 제어 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,11 +56,12 @@
             android:layout_height="wrap_content"
             android:inputType="number" />
 
+        <!-- 제어 버튼들 -->
         <Button
             android:id="@+id/sendButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="전송(write)" />
+            android:text="전송(WRITE)" />
 
         <Button
             android:id="@+id/resetButton"
@@ -63,33 +70,52 @@
             android:text="초기화" />
 
         <Button
-            android:id="@+id/tempButton"
+            android:id="@+id/autoStartButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="온습도 센서 읽기" />
+            android:text="자동 읽기 시작" />
 
+        <Button
+            android:id="@+id/autoStopButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="자동 읽기 종료" />
+
+        <Button
+            android:id="@+id/manualReadButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="수동 읽기" />
+
+        <!-- 결과 표시 -->
         <TextView
             android:id="@+id/tempResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="온도 값: -"
-            android:textColor="#FF0000"/>
+            android:textColor="#FF0000" />
 
         <TextView
             android:id="@+id/humResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="습도 값: -"
-            android:textColor="#FF0000"/>
+            android:textColor="#FF0000" />
 
+        <!-- 종료 버튼 -->
         <Button
             android:id="@+id/exitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="종료" />
+
+        <!-- 차트 -->
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="32dp" />
+
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

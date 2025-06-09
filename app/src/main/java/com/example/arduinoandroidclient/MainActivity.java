@@ -26,7 +26,27 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Entry> tempEntries = new ArrayList<>();
     ArrayList<Entry> humEntries = new ArrayList<>();
     int timeIndex = 0; // X축 시간 흐름 표현용 인덱스
+    private boolean isAutoReading = false;
+    private android.os.Handler autoHandler = new android.os.Handler();
+    void startAutoRead() {
+        isAutoReading = true;
+        autoHandler.post(autoReadRunnable);
+    }
 
+    void stopAutoRead() {
+        isAutoReading = false;
+        autoHandler.removeCallbacks(autoReadRunnable);
+    }
+
+    Runnable autoReadRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isAutoReading) {
+                requestTemp();
+                autoHandler.postDelayed(this, 1000); // 1초 주기
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,25 +60,31 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.connectButton).setOnClickListener(v -> connect());
         findViewById(R.id.sendButton).setOnClickListener(v -> sendLed());
-        findViewById(R.id.tempButton).setOnClickListener(v -> requestTemp());
         findViewById(R.id.resetButton).setOnClickListener(v -> clearFields());
         findViewById(R.id.exitButton).setOnClickListener(v -> closeApp());
         lineChart = findViewById(R.id.lineChart);
         lineChart.getDescription().setText("실시간 온습도 그래프");
         lineChart.getLegend().setEnabled(true);
+        findViewById(R.id.autoStartButton).setOnClickListener(v -> startAutoRead());
+        findViewById(R.id.autoStopButton).setOnClickListener(v -> stopAutoRead());
+        findViewById(R.id.manualReadButton).setOnClickListener(v -> requestTemp());
     }
 
     void connect() {
         new Thread(() -> {
             try {
-                String ip = ipEdit.getText().toString();
-                int port = Integer.parseInt(portEdit.getText().toString().trim()); // 추가된 포트 입력값
-                socket = new Socket(ip, port);  // 포트 사용
+                String ip = ipEdit.getText().toString().trim();
+                int port = Integer.parseInt(portEdit.getText().toString().trim());
+
+                socket = new Socket(ip, port);
                 out = new PrintWriter(socket.getOutputStream(), true);
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
                 runOnUiThread(() ->
                         Toast.makeText(this, "서버 연결 성공", Toast.LENGTH_SHORT).show());
-                startAutoUpdate();
+
+                // ❌ startAutoUpdate(); ← 이 줄 삭제
+                // ✅ 대신 수동으로 startAutoRead() 하도록 유저에게 맡기기
             } catch (NumberFormatException e) {
                 runOnUiThread(() ->
                         Toast.makeText(this, "올바른 포트 번호를 입력하세요.", Toast.LENGTH_SHORT).show());
@@ -98,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void sendCommand(String cmd) {
+        if (socket == null || socket.isClosed()) return;
         new Thread(() -> {
             try {
                 if (out != null) {
@@ -119,11 +146,16 @@ public class MainActivity extends AppCompatActivity {
 
     void closeApp() {
         try {
-            if (socket != null) socket.close();
+            stopAutoRead(); // ✅ 자동 읽기 먼저 중단
+
+            if (socket != null) {
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        finish();
+
+        finish(); // 액티비티 종료
     }
     void updateChart(float temp, float hum) {
         tempEntries.add(new Entry(timeIndex, temp));
@@ -150,15 +182,5 @@ public class MainActivity extends AppCompatActivity {
         LineData lineData = new LineData(tempDataSet, humDataSet);
         lineChart.setData(lineData);
         lineChart.invalidate(); // 그래프 갱신
-    }
-
-    void startAutoUpdate() {
-        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                requestTemp(); // 1초마다 온습도 요청
-                startAutoUpdate(); // 재귀 호출로 반복
-            }
-        }, 1000);
     }
 }
